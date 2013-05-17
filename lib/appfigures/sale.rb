@@ -38,7 +38,7 @@ module Appfigures
       product_ids = [product_ids] unless product_ids.is_a?(Array)
 
       options.merge!({:basic_auth => @auth, :products => product_ids.join(";")})
-      url = "/reports/sales/#{type}"
+      url = "/sales/#{type}"
       self.class.get(url, options)
     end
 
