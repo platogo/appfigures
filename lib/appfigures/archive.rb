@@ -19,15 +19,15 @@ module Appfigures
     
     def archives(type="all")
       raise ArgumentError, "Type must be one of TYPE: #{TYPE.values.join(", ")}" unless TYPE.values.index(type)
-      self.class.get("/archive", {:basic_auth => @auth, :type => type})
+      self.class.get("/archive", {:basic_auth => @auth, :query => { :type => type }})
     end
     
     def latest(type="all")
-      self.class.get("/archive/latest", {:basic_auth => @auth, :type => type})
+      self.class.get("/archive/latest", {:basic_auth => @auth, :query => { :type => type }})
     end
     
     def by_date(date, type="all")
-      self.class.get("/archive/#{date}", {:basic_auth => @auth, :type => type})
+      self.class.get("/archive/#{date}", {:basic_auth => @auth, :query => { :type => type }})
     end
 
     # get the raw report by report id

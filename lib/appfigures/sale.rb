@@ -20,33 +20,29 @@ module Appfigures
     
     # Generating a By App, By Country, or By Date Sales Report
     # options[:query] can be data_source, apps or country
-    def sales(type, start_date, end_date, product_ids, options={})
+    def sales(type, start_date, end_date, products, query={})
       raise ArgumentError, "Type must be one of TYPE: #{TYPE.values.join(", ")}" unless TYPE.values.index(type)
-      raise ArgumentError, "Type must be one of DATASOURCE: #{DATASOURCE.values.join(", ")}" if (options[:data_source] && !DATASOURCE.values.index(options[:data_source]))
+      raise ArgumentError, "Type must be one of DATASOURCE: #{DATASOURCE.values.join(", ")}" if (query[:data_source] && !DATASOURCE.values.index(query[:data_source]))
 
-      product_ids = [product_ids] unless product_ids.is_a?(Array)
-      options.merge!({:basic_auth => @auth, :product_ids => product_ids.join(";")})
-      url = "/sales/#{type}/#{start_date}/#{end_date}/"    
-      self.class.get(url, options)
+      products = [products] unless products.is_a?(Array)
+      query.merge!({ :products => products.join(";")})
+      self.class.get("/sales/#{type}/#{start_date}/#{end_date}/", { :basic_auth => @auth, :query => query })
     end
 
     # Generating all time totals report
     # type must be one of products, products+countries, countries, countries+products
-    def alltime_sales(type, product_ids=[], options={})
+    def alltime_sales(type, products=[], query={})
       accept_types = %w{products products+countries countries countries+products}
       raise ArgumentError, "Type must be one of TYPE: #{accept_types}" unless accept_types.include?(type)
-      product_ids = [product_ids] unless product_ids.is_a?(Array)
 
-      options.merge!({:basic_auth => @auth, :products => product_ids.join(";")})
-      url = "/sales/#{type}"
-      self.class.get(url, options)
+      products = [products] unless products.is_a?(Array)
+      query.merge!({ :products => products.join(";")})
+      self.class.get("/sales/#{type}", { :basic_auth => @auth, :query => query })
     end
 
     # Generating a By Region Sales Report
-    def region_sales(start_date, end_date, options={})
-      options.merge!({:basic_auth => @auth})
-      url = "/sales/regions/#{start_date}/#{end_date}"    
-      self.class.get(url, options)
+    def region_sales(start_date, end_date, query={})
+      self.class.get("/sales/regions/#{start_date}/#{end_date}", {:basic_auth => @auth, :query => query})
     end
     
   end
